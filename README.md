@@ -11,6 +11,9 @@ Este é um projeto de gerenciamento financeiro desenvolvido em .NET6 MVC que aju
 - Exibição de gráficos de despesas e receitas em um período mensal;
 - Geração de relatórios financeiros.
 
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/97834288/220195132-6c894454-ab34-4739-8469-40396441c6f2.gif)
+
+
 ## Como utilizar
 
 Para utilizar o Gerenciador Financeiro, basta clonar ou baixar este repositório e configurá-lo em um ambiente .NET6 MVC. Depois disso, o usuário pode acessar a página inicial e começar a cadastrar suas transações financeiras, editar e excluir transações já cadastradas, visualizar o total de despesas e receitas e também ver gráficos de despesas e receitas.
