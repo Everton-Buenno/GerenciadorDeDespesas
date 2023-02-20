@@ -1,0 +1,111 @@
+﻿@model IEnumerable<DevTon.GerenciadorDeDespesas.Models.Salario>
+
+@{
+    ViewData["Title"] = "Salários Cadastrados";
+}
+
+<div class="tabela">
+
+    <div class="container">
+
+        <h6>Salários Cadastrados</h6>
+
+        <p class="btnNovo">
+            <a class="btn btn-outline-primary btn-sm" asp-action="Create">Novo Salário</a>
+        </p>
+
+        @if(TempData["Confirmacao"] != null)
+        {
+            <h6 class="alert alert-success">
+                @TempData["Confirmacao"]
+            </h6>
+        }
+
+         <form asp-action="Index" asp-controller="Salarios" method="post">
+            <div class="form-group">
+                <div class="input-group col-md-6">
+                    <input class="form-control" name="txtProcurar" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-dark"><i class="fas fa-search-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Meses)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Valor)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Meses.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Valor)
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-info btn-sm" asp-action="Edit" asp-route-id="@item.SalarioId">Atualizar</a> |
+                            <a onclick="ExibirModal(@item.SalarioId)" class="btn btn-outline-danger btn-sm">Excluir</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excluir</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja prosseguir com a exclusão do salário ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btnExcluir">Sim</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function ExibirModal(id) {
+            $(".modal").modal();
+            $(".btnExcluir").on('click', function () {
+                $.ajax({
+                    url: "/Salarios/Delete",
+                    method: "POST",
+                    data: { id: id },
+                    success: function (data) {
+                        $(".modal").modal('hide');
+                        location.reload(true);
+                    }
+                });
+            });
+        }
+
+    </script>
+
+
+}

@@ -1,0 +1,158 @@
+﻿@model X.PagedList.IPagedList<DevTon.GerenciadorDeDespesas.Models.Despesa>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@{
+    ViewData["Title"] = "Despesas";
+}
+
+
+
+<div class="tabela">
+    <div class="container">
+        <p class="btnNovo">
+            <a class="btn btn-outline-primary btn-sm" asp-action="Create">Nova Despesa</a>
+        </p>
+
+
+        @if(TempData["Confirmacao"] != null)
+        {
+            <h6 class="alert alert-success">@TempData["Confirmacao"]</h6>
+        }
+
+        <div class="row justify-content-md-center">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label"><strong>Mês</strong></label>
+                <div class="col-sm-9">
+                    <select class="form-control escolhaMes" asp-items="ViewBag.Meses"></select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <partial name="_GastoTotalMes" />
+            </div>
+
+
+            <div class="col">
+                <partial name="_GastoMes" />
+            </div>
+
+            <div class="row">
+                <partial name="_GastosTotais" />
+            </div>
+        </div>
+
+        <div class="tabelaPrincipal">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            Meses
+                        </th>
+                        <th>
+                            Tipo Despesa
+                        </th>
+                        <th>
+                            Valor
+                        </th>
+                        <th>
+                            Ação
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Meses.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TipoDespesa.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Valor)
+                            </td>
+                            <td>
+                                <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-route-id="@item.DespesaId">Atualizar</a> |
+                                <a class="btn btn-outline-danger btn-sm" onclick="ExibirModal(@item.DespesaId)">Excluir</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@Html.PagedListPager(Model, page => Url.Action("Index", "Despesas", new { page }), new PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "paged-link" }
+
+})
+
+
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excluir</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja prosseguir com a exclusão dessa despesa ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btnExcluir">Sim</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/js/GraficoGastoMes.js"></script>
+
+    <script src="~/js/MetodosGerais.js"></script>
+
+    <script src="~/js/GraficoTotalMes.js"></script>
+  
+    <script src="~/js/GraficoGastosTotais.js"></script>
+
+
+    
+    
+    <script>
+
+
+        CarregarDadosGastosMes();
+        CarregarDadosGastosTotaisMes();
+        CarregarDadosGastosTotais();
+        
+
+        function ExibirModal(id) {
+            $(".modal").modal();
+            $(".btnExcluir").on('click', function () {
+                $.ajax({
+                    url: "/Despesas/Delete",
+                    method: "POST",
+                    data: { id: id },
+                    success: function (data) {
+                        $(".modal").modal('hide');
+                        location.reload(true);
+                    }
+                });
+            });
+        }
+
+    </script>
+
+
+}

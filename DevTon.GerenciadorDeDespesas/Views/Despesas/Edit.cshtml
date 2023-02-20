@@ -1,0 +1,43 @@
+﻿@model DevTon.GerenciadorDeDespesas.Models.Despesa
+
+@{
+    ViewData["Title"] = "Atualizar Despesa";
+}
+
+
+<div class="formulario">
+    <h6>Atualizar Despesa</h6>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" class="form rounded border">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="DespesaId" />
+                <div class="form-group">
+                    <label asp-for="MesId" class="control-label"></label>
+                    <select asp-for="MesId" class="form-control" asp-items="ViewBag.MesId"></select>
+                    <span asp-validation-for="MesId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TipoDespesaId" class="control-label"></label>
+                    <select asp-for="TipoDespesaId" class="form-control" asp-items="ViewBag.TipoDespesaId"></select>
+                    <span asp-validation-for="TipoDespesaId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Valor" class="control-label"></label>
+                    <input asp-for="Valor" class="form-control" />
+                    <span asp-validation-for="Valor" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-outline-success btn-sm" />
+                    <a asp-action="Index" class="btn btn-outline-dark btn-sm">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

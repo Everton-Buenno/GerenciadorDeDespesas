@@ -1,0 +1,105 @@
+﻿@model DevTon.GerenciadorDeDespesas.Models.Despesa
+
+@{
+    ViewData["Title"] = "Nova Despesa";
+}
+
+
+<div class="formulario">
+    <h6>Nova Despesa</h6>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" class="form rounded border">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="MesId" class="control-label">Meses</label>
+                    <select asp-for="MesId" class="form-control" asp-items="ViewBag.MesId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TipoDespesaId" class="control-label">Tipo Despesa</label>
+                    <div class="input-group">
+                        <select asp-for="TipoDespesaId" class="form-control" asp-items="ViewBag.TipoDespesaId"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="tooltip" data-placement="right" title="Adicionar novo tipo de despesa" onclick="MostrarModal()">
+                                <i class="far fa-plus-square"></i>
+                            </button>
+                           
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Valor" class="control-label"></label>
+                    <input asp-for="Valor" class="form-control" />
+                    <span asp-validation-for="Valor" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-outline-success btn-sm" />
+                    <a class="btn btn-outline-dark btn-sm" asp-action="Index">Voltar</a>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar Nova Despesa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <input class="form-control txtDespesa" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btnAdicionar">Adicionar</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function(){
+            $('[data-toggle="tooltip]').tooltip()
+        });
+
+       function MostrarModal(){
+           $(".modal").modal();
+
+           $(".btnAdicionar").on('click', function(){
+               var txtDespesa = $(".txtDespesa").val();
+
+               $.ajax({
+                    url: "/TipoDespesas/AdicionarTipoDespesa",
+                   method: "POST",
+                   data: {txtDespesa: txtDespesa},
+                   success: function(data) {
+                       if(!data){
+                           $(".modal").modal('hide');
+                           $(".modal").modal('dispose');
+                           $(".btnAdicionar").unbind('click');
+                           $(".txtDespesa").val('');
+                           alert("Tipo de despesa já cadastrado.");
+                       }
+                       else  location.reload(true);
+                   }
+               })
+           });
+       }
+    </script>
+}
